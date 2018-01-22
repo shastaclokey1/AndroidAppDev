@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Court Counter</string>
+    <string name="three_pointer">+3 Points</string>
+    <string name="two_pointer">+2 Points</string>
+    <string name="free_throw">Free Throw</string>
+    <string name="team_a_name">The A Team</string>
+    <string name="team_b_name">The Punishers</string>
+    <string name="total_points_team_a">0</string>
+    <string name="total_points_team_b">0</string>
+    <string name="reset">Reset Scores</string>
+</resources>
