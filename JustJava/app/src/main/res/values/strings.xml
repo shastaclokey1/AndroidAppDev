@@ -3,4 +3,6 @@
     <string name="quantity">0</string>
     <string name="price">$0</string>
     <string name="button_text">order</string>
+    <string name="whipped_cream">Whipped Cream</string>
+    <string name="chocolate">Chocolate Sauce</string>
 </resources>

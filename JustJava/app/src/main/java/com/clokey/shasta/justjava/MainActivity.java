@@ -10,12 +10,19 @@ package com.clokey.shasta.justjava;
 
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.text.NumberFormat;
+import java.net.URI;
+
+//import java.text.NumberFormat;
 
 /**
  * This app displays an order form to order coffee.
@@ -34,10 +41,28 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * This method is called when the order button is clicked.
+     * gets check states from choc and whip checkboxes
+     * sends order information to email application
+     * Can display the order summary to the screen
      */
     public void submitOrder(View view)
     {
-        displayPrice(numCoffees * coffeeUnitPrice);
+        CheckBox whippedCreamCheckBox = findViewById(R.id.add_whip_checkbox);
+        CheckBox chocolateSauceCheckBox = findViewById(R.id.add_chocolate_checkbox);
+        EditText nameField = findViewById(R.id.name_field_edit_text);
+        boolean hasWhip = whippedCreamCheckBox.isChecked();
+        boolean hasChoco = chocolateSauceCheckBox.isChecked();
+        String message = createOrderSummary(calculatePrice(numCoffees,coffeeUnitPrice,hasWhip,hasChoco), hasWhip, hasChoco, nameField.getText().toString());
+
+        //For sending message to email application
+//        Intent intent = new Intent(Intent.ACTION_SENDTO);
+//        intent.setData(Uri.parse("mailto:"));
+//        intent.putExtra(intent.EXTRA_SUBJECT, "Coffee order for " + nameField.getText().toString());
+//        intent.putExtra(intent.EXTRA_TEXT, message);
+//        if (intent.resolveActivity(getPackageManager()) != null)
+//            startActivity(intent);
+
+        displayOrderSummary(message);
     }
 
     /**
@@ -52,9 +77,9 @@ public class MainActivity extends AppCompatActivity
     /**
      * This method displays the given price on the screen.
      */
-    private void displayPrice(int number) {
+    private void displayOrderSummary(String message) {
         TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText("Total: " + NumberFormat.getCurrencyInstance().format(number));
+        priceTextView.setText(message);
     }
 
     /**
@@ -63,6 +88,11 @@ public class MainActivity extends AppCompatActivity
     public void addCoffeeToOrder(View view)
     {
         numCoffees++;
+        if (numCoffees > 100) //logic to ensure you don't overdose on coffee
+        {
+            numCoffees = 100;
+            Toast.makeText(this, "You cannot order more than 100 cups of coffee", Toast.LENGTH_SHORT).show();
+        }
         display(numCoffees);
     }
 
@@ -73,9 +103,41 @@ public class MainActivity extends AppCompatActivity
     {
         numCoffees--;
         if (numCoffees < 0) //logic to ensure you can't order a negative number of coffees
+        {
             numCoffees = 0;
+            Toast.makeText(this, "You cannot order a negative number of coffees", Toast.LENGTH_SHORT).show();
+        }
         display(numCoffees);
     }
 
+    /**
+     * This method creates a summary of all the important order information
+     * @param price is the total cost of coffees before toppings
+     * @param hasWhip is the true/false value identifying whether to add whipped cream
+     * @param hasChoc is the true/false value identifying whether to add chocolate sauce
+     * @param name is the name that the user enters in the edit text field
+     * @return passes a summary of the user's order back to the calling method
+     */
+    private String createOrderSummary(int price, boolean hasWhip, boolean hasChoc, String name)
+    {
+        String temp = "Name: " + name;
+        temp += "\nAdd Whipped Cream? " + hasWhip;
+        temp += "\nAdd Chocolate Sauce? " + hasChoc;
+        temp += "\nQuantity: " + numCoffees;
+        temp += "\nTotal: $" + price;
+        temp += "\nThank you!";
+        return temp;
+    }
+
+    private int calculatePrice(int numCoffees, int coffeeUnitPrice, boolean hasWhip, boolean hasChoco)
+    {
+        int price = coffeeUnitPrice;
+        if (hasWhip)
+            price += 1;
+        if (hasChoco)
+            price += 2;
+        price *= numCoffees;
+        return price;
+    }
 
 }
