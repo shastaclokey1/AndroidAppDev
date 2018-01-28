@@ -5,4 +5,13 @@
     <string name="button_text">order</string>
     <string name="whipped_cream">Whipped Cream</string>
     <string name="chocolate">Chocolate Sauce</string>
+    <string name="chocolate_sprinkles">Chocolate Sprinkles</string>
+    <string name="coco_powder">Coco Powder</string>
+    <string name="cinnamon">Cinnamon</string>
+    <string name="creamer">Creamer</string>
+    <string name="non_dairy_creamer">Non Dairy Creamer</string>
+    <string name="coconut_oil">Coconut Oil</string>
+    <string name="decaf">Decaf</string>
+    <string name="one_dollar">$1</string>
+    <string name="two_dollars">$2</string>
 </resources>

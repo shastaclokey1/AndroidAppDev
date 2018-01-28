@@ -49,18 +49,32 @@ public class MainActivity extends AppCompatActivity
     {
         CheckBox whippedCreamCheckBox = findViewById(R.id.add_whip_checkbox);
         CheckBox chocolateSauceCheckBox = findViewById(R.id.add_chocolate_checkbox);
+        CheckBox chocoSprinklesCheckBox = findViewById(R.id.add_sprinkles_checkbox);
+        CheckBox cocoPowderCheckBox = findViewById(R.id.coco_powder_checkbox);
+        CheckBox cinnamonCheckBox = findViewById(R.id.cinnamon_checkbox);
+        CheckBox creamerCheckBox = findViewById(R.id.creamer_checkbox);
+        CheckBox nonDairyCreamerCheckBox = findViewById(R.id.non_dairy_creamer_checkbox);
+        CheckBox coconutOilCheckBox = findViewById(R.id.coconut_oil_checkbox);
+        CheckBox decafCheckBox = findViewById(R.id.decaf_checkbox);
         EditText nameField = findViewById(R.id.name_field_edit_text);
         boolean hasWhip = whippedCreamCheckBox.isChecked();
         boolean hasChoco = chocolateSauceCheckBox.isChecked();
-        String message = createOrderSummary(calculatePrice(numCoffees,coffeeUnitPrice,hasWhip,hasChoco), hasWhip, hasChoco, nameField.getText().toString());
+        boolean hasCSprink = chocoSprinklesCheckBox.isChecked();
+        boolean hasCocoPow = cocoPowderCheckBox.isChecked();
+        boolean hasCinn = cinnamonCheckBox.isChecked();
+        boolean hasCream = creamerCheckBox.isChecked();
+        boolean hasNonDairyC = nonDairyCreamerCheckBox.isChecked();
+        boolean hasCoconut = coconutOilCheckBox.isChecked();
+        boolean isDecaf = decafCheckBox.isChecked();
+        String message = createOrderSummary(calculatePrice(numCoffees,coffeeUnitPrice,hasWhip,hasChoco), hasWhip, hasChoco, hasCSprink, hasCocoPow, hasCinn, hasCream, hasNonDairyC, hasCoconut, isDecaf, nameField.getText().toString());
 
         //For sending message to email application
-//        Intent intent = new Intent(Intent.ACTION_SENDTO);
-//        intent.setData(Uri.parse("mailto:"));
-//        intent.putExtra(intent.EXTRA_SUBJECT, "Coffee order for " + nameField.getText().toString());
-//        intent.putExtra(intent.EXTRA_TEXT, message);
-//        if (intent.resolveActivity(getPackageManager()) != null)
-//            startActivity(intent);
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:"));
+        intent.putExtra(intent.EXTRA_SUBJECT, "Coffee order for " + nameField.getText().toString());
+        intent.putExtra(intent.EXTRA_TEXT, message);
+        if (intent.resolveActivity(getPackageManager()) != null)
+            startActivity(intent);
 
         displayOrderSummary(message);
     }
@@ -118,11 +132,18 @@ public class MainActivity extends AppCompatActivity
      * @param name is the name that the user enters in the edit text field
      * @return passes a summary of the user's order back to the calling method
      */
-    private String createOrderSummary(int price, boolean hasWhip, boolean hasChoc, String name)
+    private String createOrderSummary(int price, boolean hasWhip, boolean hasChoc, boolean hasSprink, boolean hasCocoP, boolean hasCinna, boolean hasCream, boolean hasNonDairyC, boolean hasCoconut, boolean isDecaf, String name)
     {
         String temp = "Name: " + name;
         temp += "\nAdd Whipped Cream? " + hasWhip;
         temp += "\nAdd Chocolate Sauce? " + hasChoc;
+        temp += "\nAdd Chocolate Sprinkles? " + hasSprink;
+        temp += "\nAdd Coco Powder? " + hasCocoP;
+        temp += "\nAdd Cinnamon? " + hasCinna;
+        temp += "\nAdd Creamer? " + hasCream;
+        temp += "\nAdd Non Dairy Creamer? " + hasNonDairyC;
+        temp += "\nAdd Coconut Oil? " + hasCoconut;
+        temp += "\nDecaf? " + isDecaf;
         temp += "\nQuantity: " + numCoffees;
         temp += "\nTotal: $" + price;
         temp += "\nThank you!";
