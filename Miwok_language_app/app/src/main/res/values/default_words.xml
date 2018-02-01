@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- default words for numbers -->
+    <string name="one">One</string>
+    <string name="two">Two</string>
+    <string name="three">Three</string>
+    <string name="four">Four</string>
+    <string name="five">Five</string>
+    <string name="six">Six</string>
+    <string name="seven">Seven</string>
+    <string name="eight">Eight</string>
+    <string name="nine">Nine</string>
+    <string name="ten">Ten</string>
+
+    <!-- default words for colors -->
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="brown">Brown</string>
+    <string name="gray">Gray</string>
+    <string name="black">Black</string>
+    <string name="white">White</string>
+    <string name="dusty_yellow">Dusty Yellow</string>
+    <string name="mustard_yellow">Mustard Yellow</string>
+
+    <!-- default words for Family Members -->
+    <string name="father">Father</string>
+    <string name="mother">Mother</string>
+    <string name="son">Son</string>
+    <string name="daughter">Daughter</string>
+    <string name="older_brother">Older Brother</string>
+    <string name="younger_brother">Younger Brother</string>
+    <string name="older_sister">Older Sister</string>
+    <string name="younger_sister">Younger Sister</string>
+    <string name="grandmother">Grandmother</string>
+    <string name="grandfather">Grandfather</string>
+
+    <!-- default words for Phrases -->
+    <string name="phrase_one">Where are you going?</string>
+    <string name="phrase_two">What is your name?</string>
+    <string name="phrase_three">My name is...</string>
+    <string name="phrase_four">How are you feeling?</string>
+    <string name="phrase_five">I’m feeling good.</string>
+    <string name="phrase_six">Are you coming?</string>
+    <string name="phrase_seven">Yes, I’m coming.</string>
+    <string name="phrase_eight">I’m coming.</string>
+    <string name="phrase_nine">Let’s go.</string>
+    <string name="phrase_ten">Come here.</string>
+
+
+</resources>

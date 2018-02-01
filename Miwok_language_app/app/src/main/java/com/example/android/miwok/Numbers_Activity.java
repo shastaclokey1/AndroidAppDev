@@ -1,15 +1,8 @@
 package com.example.android.miwok;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
@@ -20,37 +13,30 @@ public class Numbers_Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_numbers_);
+        setContentView(R.layout.word_list);
 
         //Creating the list of english words for the first ten numbers(1-10) I guess we're excluding zero
-        ArrayList<String> englishWords = new ArrayList<String>();
-        englishWords.add("One");
-        englishWords.add("Two");
-        englishWords.add("Three");
-        englishWords.add("Four");
-        englishWords.add("Five");
-        englishWords.add("Six");
-        englishWords.add("Seven");
-        englishWords.add("Eight");
-        englishWords.add("Nine");
-        englishWords.add("Ten");
+        ArrayList<WordTranslations> wordsWithTranslations = new ArrayList<>();
+        wordsWithTranslations.add(new WordTranslations("One", "Lutti", R.drawable.number_one));
+        wordsWithTranslations.add(new WordTranslations("Two", "Otiiko", R.drawable.number_two));
+        wordsWithTranslations.add(new WordTranslations("Three", "Tolookosu", R.drawable.number_three));
+        wordsWithTranslations.add(new WordTranslations("Four", "Oyyisa", R.drawable.number_four));
+        wordsWithTranslations.add(new WordTranslations("Five", "Massokka", R.drawable.number_five));
+        wordsWithTranslations.add(new WordTranslations("Six", "Temmokka", R.drawable.number_six));
+        wordsWithTranslations.add(new WordTranslations("Seven", "Kenekaku", R.drawable.number_seven));
+        wordsWithTranslations.add(new WordTranslations("Eight", "Kawinta", R.drawable.number_eight));
+        wordsWithTranslations.add(new WordTranslations("Nine", "Wo'e", R.drawable.number_nine));
+        wordsWithTranslations.add(new WordTranslations("Ten", "Na'aacha", R.drawable.number_ten));
 
-        //checking that the words array was initialized correctly
-        //Log.v("Numbers_Activity", "The number at index 5 is " + englishWords.get(5));
+        //create a new word adapter that takes in the current activity as the context and the
+        //list of english to miwok translations as inputs
+        WordAdapter adapter = new WordAdapter(this,wordsWithTranslations, R.color.category_numbers);
 
-        //finding the root view(linear layout) of our number's activity
-        LinearLayout rootView = (LinearLayout)findViewById(R.id.numbers_rootView);
+        //set the list view to the numbers activity parent layout
+        ListView listView = (ListView) findViewById(R.id.list);
 
-        //adding all the english words for numbers to the root view
-        for (int i = 0; i < englishWords.size(); i++)
-        {
-            //create a temporary text view to make the current english number
-            TextView currentEnglishNum = new TextView(this );
-            //set the text of our current text view
-            currentEnglishNum.setText(englishWords.get(i));
-            //add the text view to our parent linear layout
-            rootView.addView(currentEnglishNum);
-        }
+        //pass our custom adapter to the numbers activity list view
+        listView.setAdapter(adapter);
     }
 
 }
