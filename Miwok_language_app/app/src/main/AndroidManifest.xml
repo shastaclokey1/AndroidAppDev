@@ -30,26 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Numbers_Activity"
-            android:label="@string/title_activity_numbers_"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity"/>
-        <activity
-            android:name=".Family_Members_Activity"
-            android:label="@string/title_activity_family__members_"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity"/>
-        <activity
-            android:name=".Colors_Activity"
-            android:label="@string/title_activity_colors_"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity"/>
-        <activity
-            android:name=".Phrases_Activity"
-            android:label="@string/title_activity_phrases_"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>
