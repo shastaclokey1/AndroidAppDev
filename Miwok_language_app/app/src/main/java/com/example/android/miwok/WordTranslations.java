@@ -12,22 +12,25 @@ public class WordTranslations
     private String defaultWord;
     private String miwokWord;
     private int imageResourceId;
+    private int audioResourceId;
     private boolean hasImage;
 
     //here's the constructor for this bad boy
-    public WordTranslations(String defaultWord, String miwokWord)
+    public WordTranslations(String defaultWord, String miwokWord, int audioResourceId)
     {
         this.defaultWord = defaultWord;
         this.miwokWord = miwokWord;
+        this.audioResourceId = audioResourceId;
         hasImage = false;
     }
 
     //here is an alternate constructor with an image resource id
-    public WordTranslations(String defaultWord, String miwokWord, int imageResourceId)
+    public WordTranslations(String defaultWord, String miwokWord, int imageResourceId, int audioResourceId)
     {
         this.defaultWord = defaultWord;
         this.miwokWord = miwokWord;
         this.imageResourceId = imageResourceId;
+        this.audioResourceId = audioResourceId;
         hasImage = true;
     }
 
@@ -45,6 +48,11 @@ public class WordTranslations
     public int getImageResourceId()
     {
         return imageResourceId;
+    }
+
+    public int getAudioResourceId()
+    {
+        return audioResourceId;
     }
 
     public boolean getHasImage() { return hasImage; }

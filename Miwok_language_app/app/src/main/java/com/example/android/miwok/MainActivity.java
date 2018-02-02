@@ -16,6 +16,7 @@
 package com.example.android.miwok;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -25,6 +26,7 @@ import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity
 {
+    public static MediaPlayer mMediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -33,6 +35,9 @@ public class MainActivity extends AppCompatActivity
 
         // Set the content of the activity to use the activity_main.xml layout file
         setContentView(R.layout.activity_main);
+
+        //initiallizing the media player in the main activity so it will work for the first playback
+        mMediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.number_one);
 
         //Find the text views that define the numbers, family members, colors, and phrases pages
         TextView numbers = (TextView) findViewById(R.id.numbers);

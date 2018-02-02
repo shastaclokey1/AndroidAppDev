@@ -5,8 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -77,8 +79,8 @@ public class WordAdapter extends ArrayAdapter
         defaultTextView.setText(currentWordTranslation.getDefaultWord());
 
         //find the parent view group and set the background color to the value passed by the activity
-        LinearLayout linearLayout = (LinearLayout) listItemView.findViewById(R.id.category_list_parent);
-        linearLayout.setBackgroundResource(colorResourceID);
+        FrameLayout frameLayout = (FrameLayout) listItemView.findViewById(R.id.list_item_frame);
+        frameLayout.setBackgroundResource(colorResourceID);
 
         // Return the whole list item layout (containing 2 TextViews)
         // so that it can be shown in the ListView
