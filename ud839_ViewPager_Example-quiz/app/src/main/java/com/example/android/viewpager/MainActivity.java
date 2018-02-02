@@ -22,10 +22,12 @@ import android.support.v7.app.AppCompatActivity;
 /**
  * Displays a {@link ViewPager} where each page shows a different day of the week.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
         // Set the content of the activity to use the activity_main.xml layout file
