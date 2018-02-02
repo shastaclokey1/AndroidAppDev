@@ -31,4 +31,7 @@
     <string name="title_activity_family__members_">Family Members</string>
     <string name="title_activity_colors_">Colors</string>
     <string name="title_activity_phrases_">Phrases</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
