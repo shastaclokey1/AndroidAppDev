@@ -18,6 +18,7 @@ package com.example.android.miwok;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -36,67 +37,14 @@ public class MainActivity extends AppCompatActivity
         // Set the content of the activity to use the activity_main.xml layout file
         setContentView(R.layout.activity_main);
 
-        //initiallizing the media player in the main activity so it will work for the first playback
-        mMediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.number_one);
+        // Find the view pager that will allow the user to swipe between fragments
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        //Find the text views that define the numbers, family members, colors, and phrases pages
-        TextView numbers = (TextView) findViewById(R.id.numbers);
-        TextView familyMembers = (TextView) findViewById(R.id.family);
-        TextView colors = (TextView) findViewById(R.id.colors);
-        TextView phrases = (TextView) findViewById(R.id.phrases);
+        // Create an adapter that knows which fragment should be shown on each page
+        CategoryAdapter adapter = new CategoryAdapter(getSupportFragmentManager());
 
-        //Set the click listeners for all of these sweet text views and define the listener so it opens the respective page
-        numbers.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        //make the numbers activity intent
-                        Intent numbersIntent = new Intent(MainActivity.this, Numbers_Activity.class);
-                        //start the numbers activity using the intent
-                        startActivity(numbersIntent);
-                    }
-                });
-
-        familyMembers.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        //make the family members activity intent
-                        Intent familyMembersIntent = new Intent(MainActivity.this, Family_Members_Activity.class);
-                        //start the family members activity using the intent
-                        startActivity(familyMembersIntent);
-                    }
-                });
-
-        colors.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        //make the colors activity intent
-                        Intent colorsIntent = new Intent(MainActivity.this, Colors_Activity.class);
-                        //start the colors activity using the intent
-                        startActivity(colorsIntent);
-                    }
-                });
-
-        phrases.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        //make the phrases activity intent
-                        Intent phrasesIntent = new Intent(MainActivity.this, Phrases_Activity.class);
-                        //start the phrases activity using the intent
-                        startActivity(phrasesIntent);
-                    }
-                });
+        // Set the adapter onto the view pager
+        viewPager.setAdapter(adapter);
     }
 
 
