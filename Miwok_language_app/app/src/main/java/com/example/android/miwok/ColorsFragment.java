@@ -1,19 +1,34 @@
 package com.example.android.miwok;
 
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class Colors_Activity extends AppCompatActivity
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class ColorsFragment extends Fragment
 {
+
+    //audio manager to be used for playing recordings of miwok words
     private AudioManager mAudioManager;
+
+    //media player for playing sounds
+    private MediaPlayer mMediaPlayer;
+
+    //listener used to detect when the audio focus changes(when another activity/program interrupts ours)
     private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener()
     {
         //changing what happens when we gain and lose audio focus
@@ -29,13 +44,13 @@ public class Colors_Activity extends AppCompatActivity
 
                 // Pause playback and reset player to the start of the file. That way, we can
                 // play the word from the beginning when we resume playback.
-                MainActivity.mMediaPlayer.pause();
-                MainActivity.mMediaPlayer.seekTo(0);
+                mMediaPlayer.pause();
+                mMediaPlayer.seekTo(0);
             }
             else if (focusChange == AudioManager.AUDIOFOCUS_GAIN)
             {
                 // The AUDIOFOCUS_GAIN case means we have regained focus and can resume playback.
-                MainActivity.mMediaPlayer.start();
+                mMediaPlayer.start();
             }
             else if (focusChange == AudioManager.AUDIOFOCUS_LOSS)
             {
@@ -46,14 +61,46 @@ public class Colors_Activity extends AppCompatActivity
         }
     };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
+    /**
+     * Clean up the media player by releasing its resources.
+     */
+    private void releaseMediaPlayer()
     {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.word_list);
+        // If the media player is not null, then it may be currently playing a sound.
+        if (mMediaPlayer != null)
+        {
+            // Regardless of the current state of the media player, release its resources
+            // because we no longer need it.
+            mMediaPlayer.release();
+
+            // Set the media player back to null. For our code, we've decided that
+            // setting the media player to null is an easy way to tell that the media player
+            // is not configured to play an audio file at the moment.
+            mMediaPlayer = null;
+
+            // Regardless of whether or not we were granted audio focus, abandon it. This also
+            // unregisters the AudioFocusChangeListener so we don't get anymore callbacks.
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+        }
+    }
+
+    //setting up the completion listener to detect and report when an audio file finishes
+    MediaPlayer.OnCompletionListener mCompletionListener = new MediaPlayer.OnCompletionListener()
+    {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer)
+        {
+            releaseMediaPlayer();
+        }
+    };
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        View rootView = inflater.inflate(R.layout.word_list, container, false);
 
         //create the audio manager
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) getActivity().getSystemService(Context.AUDIO_SERVICE);
 
         //Creating the list of english words for the first ten numbers(1-10) I guess we're excluding zero
         final ArrayList<WordTranslations> wordsWithTranslations = new ArrayList<>();
@@ -66,12 +113,13 @@ public class Colors_Activity extends AppCompatActivity
         wordsWithTranslations.add(new WordTranslations("Dusty Yellow", "ṭopiisә",R.drawable.color_dusty_yellow, R.raw.color_dusty_yellow));
         wordsWithTranslations.add(new WordTranslations("Mustard Yellow", "chiwiiṭә",R.drawable.color_mustard_yellow, R.raw.color_mustard_yellow));
 
+
         //create a new word adapter that takes in the current activity as the context and the
         //list of english to miwok translations as inputs
-        WordAdapter adapter = new WordAdapter(this,wordsWithTranslations, R.color.category_colors);
+        WordAdapter adapter = new WordAdapter(getActivity(),wordsWithTranslations, R.color.category_colors);
 
         //set the list view to the numbers activity parent layout
-        ListView listView = (ListView) findViewById(R.id.list);
+        ListView listView = (ListView) rootView.findViewById(R.id.list);
 
         //pass our custom adapter to the numbers activity list view
         listView.setAdapter(adapter);
@@ -93,55 +141,34 @@ public class Colors_Activity extends AppCompatActivity
                 if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
                 {
                     //create media player and load it with the right audio file specified by the word translations list at index i
-                    MainActivity.mMediaPlayer = MediaPlayer.create(Colors_Activity.this, wordsWithTranslations.get(i).getAudioResourceId());
+                    mMediaPlayer = MediaPlayer.create(getActivity(), wordsWithTranslations.get(i).getAudioResourceId());
 
                     //start playing the audio file
 
-                    MainActivity.mMediaPlayer.start();
+                    mMediaPlayer.start();
 
                     //create a call back to release the memory allocated to the audio file when it is done playing
-                    MainActivity.mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-                    {
-                        @Override
-                        public void onCompletion(MediaPlayer mediaPlayer)
-                        {
-                            releaseMediaPlayer();
-                        }
-                    });
+                    mMediaPlayer.setOnCompletionListener(mCompletionListener);
                 }
             }
         });
+
+        return rootView;
     }
 
-    //overriding the on stop method to release the media player when the app is exited
     @Override
-    protected void onStop()
+    public void onStop()
     {
         super.onStop();
+
+        // When the activity is stopped, release the media player resources because we won't
+        // be playing any more sounds.
         releaseMediaPlayer();
     }
 
-    /**
-     * Clean up the media player by releasing its resources.
-     */
-    private void releaseMediaPlayer()
+    public ColorsFragment()
     {
-        // If the media player is not null, then it may be currently playing a sound.
-        if (MainActivity.mMediaPlayer != null)
-        {
-            // Regardless of the current state of the media player, release its resources
-            // because we no longer need it.
-            MainActivity.mMediaPlayer.release();
-
-            // Set the media player back to null. For our code, we've decided that
-            // setting the media player to null is an easy way to tell that the media player
-            // is not configured to play an audio file at the moment.
-            MainActivity.mMediaPlayer = null;
-
-            // Regardless of whether or not we were granted audio focus, abandon it. This also
-            // unregisters the AudioFocusChangeListener so we don't get anymore callbacks.
-            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-        }
+        // Required empty public constructor
     }
 
 }
