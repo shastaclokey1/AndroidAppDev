@@ -1,5 +1,8 @@
 package com.example.android.miwok;
 
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,6 +13,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class CategoryAdapter extends FragmentPagerAdapter
 {
+    final int PAGE_COUNT = 4;
+    private String tabTitles[] = new String[] { "Numbers", "Colors", "Family Members", "Phrases" };
+
     public CategoryAdapter(FragmentManager fm)
     {
         super(fm);
@@ -29,7 +35,14 @@ public class CategoryAdapter extends FragmentPagerAdapter
     }
 
     @Override
+    public CharSequence getPageTitle(int position)
+    {
+        // Generate title based on item position
+        return tabTitles[position];
+    }
+
+    @Override
     public int getCount() {
-        return 4;
+        return PAGE_COUNT;
     }
 }
