@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">GoogleBooksSearch</string>
-    <string name="search_hint">Enter Book Title</string>
+    <string name="search_hint">Enter Book Title(Default: android)</string>
     <string name="search">Search</string>
+    <string name="no_internet_connection">No Network Connection</string>
+    <string name="no_books_found">No Books Found</string>
 </resources>

@@ -6,29 +6,27 @@ package com.clokey.shasta.googlebookssearch;
 
 public class Book
 {
-    private String title, author, publisher, description;
+    private String title, author, publisher, description, previewUrl, thumbnailLink;
 
-    public Book(String title, String author, String publisher, String description)
+    public Book(String title, String author, String publisher, String description, String previewUrl, String thumbnailLink)
     {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.description = description;
+        this.previewUrl = previewUrl;
+        this.thumbnailLink = thumbnailLink;
     }
 
-    //Getters and Setters for all the private variables
-    public String getTitle() {return title;}
-
-    public void setTitle(String title) {this.title = title;}
+    //Getters for all the private variables
+    public String getTitle()
+    {
+        return title;
+    }
 
     public String getAuthor()
     {
         return author;
-    }
-
-    public void setAuthor(String author)
-    {
-        this.author = author;
     }
 
     public String getPublisher()
@@ -36,18 +34,18 @@ public class Book
         return publisher;
     }
 
-    public void setPublisher(String publisher)
-    {
-        this.publisher = publisher;
-    }
-
     public String getDescription()
     {
         return description;
     }
 
-    public void setDescription(String description)
+    public String getPreviewUrl()
     {
-        this.description = description;
+        return previewUrl;
+    }
+
+    public String getThumbnailLink()
+    {
+        return thumbnailLink;
     }
 }
