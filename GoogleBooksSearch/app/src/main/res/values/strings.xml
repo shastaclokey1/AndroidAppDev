@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">GoogleBooksSearch</string>
+    <string name="search_hint">Enter Book Title</string>
+    <string name="search">Search</string>
+</resources>
