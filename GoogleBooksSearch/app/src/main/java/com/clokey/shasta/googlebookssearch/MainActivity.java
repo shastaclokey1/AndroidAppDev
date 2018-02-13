@@ -23,7 +23,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<Book>>
 {
     /** test url to verify that the http network connections are functioning properly */
-    private String REQUEST_URL = "https://www.googleapis.com/books/v1/volumes?q=android&maxResults=1";
+    private static String REQUEST_URL = "https://www.googleapis.com/books/v1/volumes/query";
 
     /** Max number of search results from the http request */
     private final int MAX_SEARCH_RESULTS = 10;
@@ -99,6 +99,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 //set the text from the search field to be the http request query
                 REQUEST_URL = buildSearchUrl(mSearchFieldEditText.getText().toString());
 
+//                Uri baseUri = Uri.parse(REQUEST_URL);
+//                Uri.Builder uriBuilder = baseUri.buildUpon();
+//
+//                //telling the http uri the query parameters we want to append
+//                uriBuilder.appendQueryParameter("q", mSearchFieldEditText.getText().toString());
+//                uriBuilder.appendQueryParameter("maxResults", Integer.toString(MAX_SEARCH_RESULTS));
+
+//                Bundle bundle = new Bundle();
+//                bundle.putString("request_url", uriBuilder.toString());
+
                 Log.v("On Search Button Click", REQUEST_URL);
 
                 // Get a reference to the ConnectivityManager to check state of network connectivity
@@ -135,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<List<Book>> onCreateLoader(int i, Bundle bundle)
     {
+        Log.v("onCreateLoader", REQUEST_URL);
         // Create a new loader for the given URL
         return new BooksDataLoader(this, REQUEST_URL);
     }
@@ -169,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     {
         // Loader reset, so we can clear out our existing data.
         mAdapter.clear();
+        Log.v("onLoaderReset", REQUEST_URL);
     }
 
     private String buildSearchUrl(String searchText)

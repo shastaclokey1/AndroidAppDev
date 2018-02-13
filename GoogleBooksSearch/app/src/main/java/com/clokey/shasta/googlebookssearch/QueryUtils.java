@@ -39,6 +39,7 @@ public final class QueryUtils
         String jsonResponse = null;
         try
         {
+            Log.v("fetchBooksData", requestUrl);
             jsonResponse = makeHttpRequest(url);
         }
         catch (IOException e)
@@ -80,6 +81,8 @@ public final class QueryUtils
         // If the URL is null, then return early.
         if (url == null)
             return jsonResponse;
+
+        Log.v("makeHttpRequest", url.toString());
 
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;

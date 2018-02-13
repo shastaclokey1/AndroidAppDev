@@ -2,6 +2,7 @@ package com.clokey.shasta.googlebookssearch;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class BooksDataLoader extends AsyncTaskLoader<List<Book>>
     {
         super(context);
         this.mUrl = url;
+        Log.v("BooksDataLoader", url);
     }
 
     @Override
@@ -37,6 +39,7 @@ public class BooksDataLoader extends AsyncTaskLoader<List<Book>>
         if (mUrl == null)
             return null;
 
+        Log.v("loadInBackground", mUrl);
         //otherwise start the async http request for earthquake data
         ArrayList<Book> books = QueryUtils.fetchBooksData(mUrl);
         return books;
