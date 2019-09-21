@@ -15,6 +15,8 @@
  */
 package com.example.android.pets;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -26,11 +28,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import com.example.android.pets.dataContracts.PetContract.PetEntry;
+import com.example.android.pets.dataContracts.PetDBHelper;
 
 /**
  * Allows user to create a new pet or edit an existing one.
  */
-public class EditorActivity extends AppCompatActivity {
+public class EditorActivity extends AppCompatActivity
+{
 
     /** EditText field to enter the pet's name */
     private EditText mNameEditText;
@@ -51,7 +58,8 @@ public class EditorActivity extends AppCompatActivity {
     private int mGender = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
 
@@ -67,7 +75,8 @@ public class EditorActivity extends AppCompatActivity {
     /**
      * Setup the dropdown spinner that allows the user to select the gender of the pet.
      */
-    private void setupSpinner() {
+    private void setupSpinner()
+    {
         // Create adapter for spinner. The list options are from the String array it will use
         // the spinner will use the default layout
         ArrayAdapter genderSpinnerAdapter = ArrayAdapter.createFromResource(this,
@@ -80,18 +89,20 @@ public class EditorActivity extends AppCompatActivity {
         mGenderSpinner.setAdapter(genderSpinnerAdapter);
 
         // Set the integer mSelected to the constant values
-        mGenderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mGenderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
                 String selection = (String) parent.getItemAtPosition(position);
-                if (!TextUtils.isEmpty(selection)) {
-                    if (selection.equals(getString(R.string.gender_male))) {
-                        mGender = 1; // Male
-                    } else if (selection.equals(getString(R.string.gender_female))) {
-                        mGender = 2; // Female
-                    } else {
-                        mGender = 0; // Unknown
-                    }
+                if (!TextUtils.isEmpty(selection))
+                {
+                    if (selection.equals(getString(R.string.gender_male)))
+                        mGender = PetEntry.GENDER_MALE; // Male
+                    else if (selection.equals(getString(R.string.gender_female)))
+                        mGender = PetEntry.GENDER_FEMALE; // Female
+                    else
+                        mGender = PetEntry.GENDER_UNKNOWN; // Unknown
                 }
             }
 
@@ -104,7 +115,8 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu options from the res/menu/menu_editor.xml file.
         // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.menu_editor, menu);
@@ -112,12 +124,15 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // User clicked on a menu option in the app bar overflow menu
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                // Do nothing for now
+                insertPet();
+                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -130,5 +145,27 @@ public class EditorActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void insertPet()
+    {
+        String name = mNameEditText.getText().toString().trim();
+        String breed = mBreedEditText.getText().toString().trim();
+        int weight = Integer.parseInt(mWeightEditText.getText().toString().trim());
+
+        ContentValues newPet = new ContentValues();
+        newPet.put(PetEntry.COLUMN_PET_NAME, name);
+        newPet.put(PetEntry.COLUMN_PET_BREED, breed);
+        newPet.put(PetEntry.COLUMN_PET_WEIGHT, weight);
+        newPet.put(PetEntry.COLUMN_PET_GENDER, mGender);
+
+        PetDBHelper dbHelper = new PetDBHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        long insertRtn = db.insert(PetEntry.TABLE_NAME, null, newPet);
+
+        if (insertRtn == -1)
+            Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, name + " added to the shelter database", Toast.LENGTH_LONG).show();
     }
 }
