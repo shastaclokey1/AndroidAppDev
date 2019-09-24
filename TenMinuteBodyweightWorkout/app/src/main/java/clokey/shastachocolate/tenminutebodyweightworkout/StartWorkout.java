@@ -98,9 +98,6 @@ public class StartWorkout extends AppCompatActivity
     public void onPause()
     {
         super.onPause();
-        timerHandler.removeCallbacks(timerRunnable);
-        Button b = (Button)findViewById(R.id.start_workout);
-        b.setText("start");
     }
 
     public void displayNextWorkout(String workoutName)
