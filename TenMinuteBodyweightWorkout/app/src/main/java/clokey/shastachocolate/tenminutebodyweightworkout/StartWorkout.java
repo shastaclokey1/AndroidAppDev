@@ -1,9 +1,7 @@
 package clokey.shastachocolate.tenminutebodyweightworkout;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
-import android.provider.MediaStore;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +10,9 @@ import android.widget.TextView;
 import android.os.Handler;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.speech.tts.TextToSpeech;
 
+import java.util.Locale;
 
 
 public class StartWorkout extends AppCompatActivity
@@ -29,6 +29,8 @@ public class StartWorkout extends AppCompatActivity
 
     private AudioManager audioManager;
     private MediaPlayer mediaPlayer;
+
+    TextToSpeech workoutInstructor;
 
 
 
@@ -48,7 +50,6 @@ public class StartWorkout extends AppCompatActivity
 
             if ((seconds == 0 || seconds == 30) && !workoutChanged)
             {
-                result = audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
                 if (workoutCounter == workoutNames.length)
                 {
                     displayNextWorkout("You Did It!");
@@ -57,11 +58,13 @@ public class StartWorkout extends AppCompatActivity
                     b.setText("Start Workout");
                     return;
                 }
-                if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 {
-                    mediaPlayer = MediaPlayer.create(getApplicationContext(), workoutAudioFileResourceNames[workoutCounter]);
-                    mediaPlayer.start();
-                    mediaPlayer.setOnCompletionListener(mediaCompletionListener);
+                    workoutInstructor.speak(workoutNames[workoutCounter], TextToSpeech.QUEUE_FLUSH, null, null);
+                }
+                else
+                {
+                    workoutInstructor.speak(workoutNames[workoutCounter], TextToSpeech.QUEUE_FLUSH, null);
                 }
                 displayNextWorkout(workoutNames[workoutCounter]);
                 workoutCounter++;
@@ -90,6 +93,18 @@ public class StartWorkout extends AppCompatActivity
 
         SetWorkoutNames();
         SetWorkoutAudioFileResources();
+
+        workoutInstructor = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener()
+        {
+            @Override
+            public void onInit(int status)
+            {
+                if (status != TextToSpeech.ERROR)
+                {
+                    workoutInstructor.setLanguage(Locale.US);
+                }
+            }
+        });
 
         b = (Button) findViewById(R.id.start_workout);
         b.setText("Start Workout");
