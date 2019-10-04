@@ -12,6 +12,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.speech.tts.TextToSpeech;
 
+import org.w3c.dom.Text;
+
 import java.util.Locale;
 
 
@@ -21,11 +23,13 @@ public class StartWorkout extends AppCompatActivity
     private TextView timerTextView;
     private long startTime = 0;
     private Button b;
-    private boolean workoutChanged = false;
     private int workoutCounter = 0;
+    private int timeForNextExercise = 0;
+    private TextView exerciseDurationTextView;
 
     private String[] workoutNames = new String[20];
     private int[] workoutAudioFileResourceNames = new int[20];
+    private int[] exerciseDurations = new int[20];
 
     private AudioManager audioManager;
     private MediaPlayer mediaPlayer;
@@ -46,36 +50,27 @@ public class StartWorkout extends AppCompatActivity
             long millis = System.currentTimeMillis() - startTime;
             int seconds = (int) (millis / 1000);
             int minutes = seconds / 60;
-            seconds = seconds % 60;
 
-            if ((seconds == 0 || seconds == 30) && !workoutChanged)
+            if (seconds == timeForNextExercise)
             {
                 if (workoutCounter == workoutNames.length)
                 {
+                    workoutInstructor.speak("You Did It!", TextToSpeech.QUEUE_FLUSH, null, null);
                     displayNextWorkout("You Did It!");
                     timerHandler.removeCallbacks(timerRunnable);
-                    timerTextView.setText(String.format("%d:%02d", 0, 0));
+                    timerTextView.setText("");
+                    exerciseDurationTextView.setText("");
                     b.setText("Start Workout");
                     return;
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
-                    workoutInstructor.speak(workoutNames[workoutCounter], TextToSpeech.QUEUE_FLUSH, null, null);
-                }
-                else
-                {
-                    workoutInstructor.speak(workoutNames[workoutCounter], TextToSpeech.QUEUE_FLUSH, null);
-                }
+                workoutInstructor.speak(workoutNames[workoutCounter], TextToSpeech.QUEUE_FLUSH, null, null);
                 displayNextWorkout(workoutNames[workoutCounter]);
+                timeForNextExercise = timeForNextExercise + exerciseDurations[workoutCounter];
                 workoutCounter++;
-                workoutChanged = true;
-            }
-            else
-            {
-                workoutChanged = false;
             }
 
-            timerTextView.setText(String.format("%d:%02d", minutes, seconds));
+            exerciseDurationTextView.setText(String.format("%02d", timeForNextExercise - seconds));
+            timerTextView.setText(String.format("%d:%02d", minutes, seconds % 60));
 
             timerHandler.postDelayed(this, 500);
         }
@@ -88,11 +83,13 @@ public class StartWorkout extends AppCompatActivity
         setContentView(R.layout.activity_start_workout);
 
         timerTextView = (TextView) findViewById(R.id.workout_time);
+        exerciseDurationTextView = (TextView) findViewById(R.id.exercise_time_left);
 
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 
         SetWorkoutNames();
         SetWorkoutAudioFileResources();
+        setExerciseDurations();
 
         workoutInstructor = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener()
         {
@@ -118,13 +115,15 @@ public class StartWorkout extends AppCompatActivity
                 {
                     timerHandler.removeCallbacks(timerRunnable);
                     b.setText("Start Workout");
-                    timerTextView.setText(String.format("%d:%02d", 0, 0));
+                    timerTextView.setText("");
+                    exerciseDurationTextView.setText("");
                     displayNextWorkout("Get Ready To Rock!");
                 }
                 else
                 {
                     startTime = System.currentTimeMillis();
                     workoutCounter = 0;
+                    timeForNextExercise = 0;
                     timerHandler.postDelayed(timerRunnable, 0);
                     b.setText("Stop Workout");
                 }
@@ -138,13 +137,13 @@ public class StartWorkout extends AppCompatActivity
         super.onPause();
     }
 
-    public void displayNextWorkout(String workoutName)
+    private void displayNextWorkout(String workoutName)
     {
         TextView workoutView = (TextView) findViewById(R.id.workout_name);
         workoutView.setText(workoutName);
     }
 
-    public void SetWorkoutNames()
+    private void SetWorkoutNames()
     {
         workoutNames[0] = "Extended Plank Ups";
         workoutNames[1] = "Shoulder Taps";
@@ -168,7 +167,7 @@ public class StartWorkout extends AppCompatActivity
         workoutNames[19] = "Plank Knee Ins";
     }
 
-    public void SetWorkoutAudioFileResources()
+    private void SetWorkoutAudioFileResources()
     {
         workoutAudioFileResourceNames[0] = R.raw.extended_plank_ups;
         workoutAudioFileResourceNames[1] = R.raw.shoulder_taps;
@@ -190,6 +189,31 @@ public class StartWorkout extends AppCompatActivity
         workoutAudioFileResourceNames[17] = R.raw.squat_jump_ins;
         workoutAudioFileResourceNames[18] = R.raw.run_in_place;
         workoutAudioFileResourceNames[19] = R.raw.plank_knee_ins;
+    }
+
+    private void setExerciseDurations()
+    {
+        exerciseDurations[0] = 30;
+        exerciseDurations[1] = 30;
+        exerciseDurations[2] = 30;
+        exerciseDurations[3] = 30;
+        exerciseDurations[4] = 30;
+        exerciseDurations[5] = 30;
+        exerciseDurations[6] = 30;
+        exerciseDurations[7] = 30;
+        exerciseDurations[8] = 30;
+        exerciseDurations[9] = 30;
+        exerciseDurations[10] = 30;
+        exerciseDurations[11] = 30;
+        exerciseDurations[12] = 30;
+        exerciseDurations[13] = 30;
+        exerciseDurations[14] = 30;
+        exerciseDurations[15] = 30;
+        exerciseDurations[16] = 30;
+        exerciseDurations[17] = 30;
+        exerciseDurations[18] = 30;
+        exerciseDurations[19] = 30;
+
     }
 
 
