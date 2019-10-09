@@ -50,6 +50,33 @@
             android:textSize="40dp"
             android:layout_gravity="center"/>
 
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/workout_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton android:id="@+id/abs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Abs"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/arms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Arms"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/legs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Legs"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/full_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Full Body"
+                android:onClick="onRadioButtonClicked"/>
+        </RadioGroup>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.os.Handler;
 import android.media.AudioManager;
@@ -26,10 +28,10 @@ public class StartWorkout extends AppCompatActivity
     private int workoutCounter = 0;
     private int timeForNextExercise = 0;
     private TextView exerciseDurationTextView;
+    private RadioGroup workoutPicker;
 
-    private String[] workoutNames = new String[20];
-    private int[] workoutAudioFileResourceNames = new int[20];
-    private int[] exerciseDurations = new int[20];
+    private Exercise[] workout;
+    private Exercise[] nextWorkout;
 
     private AudioManager audioManager;
     private MediaPlayer mediaPlayer;
@@ -53,19 +55,20 @@ public class StartWorkout extends AppCompatActivity
 
             if (seconds == timeForNextExercise)
             {
-                if (workoutCounter == workoutNames.length)
+                if (workoutCounter == workout.length)
                 {
                     workoutInstructor.speak("You Did It!", TextToSpeech.QUEUE_FLUSH, null, null);
                     displayNextWorkout("You Did It!");
+                    workoutPicker.setVisibility(View.VISIBLE);
                     timerHandler.removeCallbacks(timerRunnable);
                     timerTextView.setText("");
                     exerciseDurationTextView.setText("");
                     b.setText("Start Workout");
                     return;
                 }
-                workoutInstructor.speak(workoutNames[workoutCounter], TextToSpeech.QUEUE_FLUSH, null, null);
-                displayNextWorkout(workoutNames[workoutCounter]);
-                timeForNextExercise = timeForNextExercise + exerciseDurations[workoutCounter];
+                workoutInstructor.speak(workout[workoutCounter].getName(), TextToSpeech.QUEUE_FLUSH, null, null);
+                displayNextWorkout(workout[workoutCounter].getName());
+                timeForNextExercise = timeForNextExercise + workout[workoutCounter].getDuration();
                 workoutCounter++;
             }
 
@@ -84,12 +87,11 @@ public class StartWorkout extends AppCompatActivity
 
         timerTextView = (TextView) findViewById(R.id.workout_time);
         exerciseDurationTextView = (TextView) findViewById(R.id.exercise_time_left);
+        workoutPicker = (RadioGroup) findViewById(R.id.workout_type);
 
         audioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
 
-        SetWorkoutNames();
-        SetWorkoutAudioFileResources();
-        setExerciseDurations();
+        nextWorkout = InitMackenzieAbWorkout();
 
         workoutInstructor = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener()
         {
@@ -117,6 +119,7 @@ public class StartWorkout extends AppCompatActivity
                     b.setText("Start Workout");
                     timerTextView.setText("");
                     exerciseDurationTextView.setText("");
+                    workoutPicker.setVisibility(View.VISIBLE);
                     displayNextWorkout("Get Ready To Rock!");
                 }
                 else
@@ -124,6 +127,8 @@ public class StartWorkout extends AppCompatActivity
                     startTime = System.currentTimeMillis();
                     workoutCounter = 0;
                     timeForNextExercise = 0;
+                    workout = nextWorkout;
+                    workoutPicker.setVisibility(View.INVISIBLE);
                     timerHandler.postDelayed(timerRunnable, 0);
                     b.setText("Stop Workout");
                 }
@@ -137,83 +142,108 @@ public class StartWorkout extends AppCompatActivity
         super.onPause();
     }
 
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId())
+        {
+            case R.id.abs:
+                if (checked)
+                    nextWorkout = InitMackenzieAbWorkout();
+                    break;
+            case R.id.arms:
+                if (checked)
+                    nextWorkout = InitArmWorkout();
+                    break;
+            case R.id.legs:
+                if (checked)
+                    nextWorkout = InitLegWorkout();
+                    break;
+            case R.id.full_body:
+                if (checked)
+                    nextWorkout = InitFullBodyWorkout();
+                    break;
+        }
+    }
+
     private void displayNextWorkout(String workoutName)
     {
         TextView workoutView = (TextView) findViewById(R.id.workout_name);
         workoutView.setText(workoutName);
     }
 
-    private void SetWorkoutNames()
+    private Exercise[] InitMackenzieAbWorkout()
     {
-        workoutNames[0] = "Extended Plank Ups";
-        workoutNames[1] = "Shoulder Taps";
-        workoutNames[2] = "Plank Supermans";
-        workoutNames[3] = "Mountain Climbers";
-        workoutNames[4] = "Knee Jumps";
-        workoutNames[5] = "Lunge Step Backs";
-        workoutNames[6] = "Body-weight Crunch";
-        workoutNames[7] = "Scissor Kicks";
-        workoutNames[8] = "Candlesticks";
-        workoutNames[9] = "Left Side Plank Raise";
-        workoutNames[10] = "Right Side Plank Raise";
-        workoutNames[11] = "Frog Jump Feet To Hands";
-        workoutNames[12] = "Controlled Push-ups";
-        workoutNames[13] = "Rest / Stretch";
-        workoutNames[14] = "Russian Twists";
-        workoutNames[15] = "V-Sit Crunches";
-        workoutNames[16] = "Squat To Toe Touch";
-        workoutNames[17] = "Squat Jump Ins";
-        workoutNames[18] = "Run On The Spot";
-        workoutNames[19] = "Plank Knee Ins";
+        Exercise[] workout = new Exercise[8];
+
+        workout[0] = new Exercise("Plank", 120);
+        workout[1] = new Exercise("Left Side Plank", 60);
+        workout[2] = new Exercise("Right Side Plank", 60);
+        workout[3] = new Exercise("High Pushup", 120);
+        workout[4] = new Exercise("Plank", 60);
+        workout[5] = new Exercise("Left Side Plank", 60);
+        workout[6] = new Exercise("Right Side Plank", 60);
+        workout[7] = new Exercise("High Pushup", 60);
+
+        return workout;
     }
 
-    private void SetWorkoutAudioFileResources()
+    private Exercise[] InitArmWorkout()
     {
-        workoutAudioFileResourceNames[0] = R.raw.extended_plank_ups;
-        workoutAudioFileResourceNames[1] = R.raw.shoulder_taps;
-        workoutAudioFileResourceNames[2] = R.raw.plank_supermans;
-        workoutAudioFileResourceNames[3] = R.raw.mountain_climbers;
-        workoutAudioFileResourceNames[4] = R.raw.knee_jumps;
-        workoutAudioFileResourceNames[5] = R.raw.lunge_step_backs;
-        workoutAudioFileResourceNames[6] = R.raw.bodyweight_crunch;
-        workoutAudioFileResourceNames[7] = R.raw.scissor_kicks;
-        workoutAudioFileResourceNames[8] = R.raw.candlesticks;
-        workoutAudioFileResourceNames[9] = R.raw.left_side_plank_raise;
-        workoutAudioFileResourceNames[10] = R.raw.right_side_plank_raise;
-        workoutAudioFileResourceNames[11] = R.raw.frog_jump_feet_to_hands;
-        workoutAudioFileResourceNames[12] = R.raw.controlled_pushups;
-        workoutAudioFileResourceNames[13] = R.raw.rest_and_stretch;
-        workoutAudioFileResourceNames[14] = R.raw.russian_twists;
-        workoutAudioFileResourceNames[15] = R.raw.v_sit_crunches;
-        workoutAudioFileResourceNames[16] = R.raw.squat_to_toe_touch;
-        workoutAudioFileResourceNames[17] = R.raw.squat_jump_ins;
-        workoutAudioFileResourceNames[18] = R.raw.run_in_place;
-        workoutAudioFileResourceNames[19] = R.raw.plank_knee_ins;
+        Exercise[] workout = new Exercise[10];
+
+        workout[0] = new Exercise("Controlled Push-ups", 30);
+        workout[1] = new Exercise("Coffee Table", 60);
+        workout[2] = new Exercise("Shoulder Shrug Plank", 120);
+        workout[3] = new Exercise("Touch Toes", 30);
+        workout[4] = new Exercise("Controlled Push-ups", 30);
+        workout[5] = new Exercise("Coffee Table", 60);
+        workout[6] = new Exercise("Shoulder Shrug Plank", 120);
+        workout[7] = new Exercise("Touch Toes", 30);
+        workout[8] = new Exercise("Controlled Push-ups", 60);
+        workout[9] = new Exercise("Shoulder Shrug Plank", 60);
+
+
+        return workout;
     }
 
-    private void setExerciseDurations()
+    private Exercise[] InitLegWorkout()
     {
-        exerciseDurations[0] = 30;
-        exerciseDurations[1] = 30;
-        exerciseDurations[2] = 30;
-        exerciseDurations[3] = 30;
-        exerciseDurations[4] = 30;
-        exerciseDurations[5] = 30;
-        exerciseDurations[6] = 30;
-        exerciseDurations[7] = 30;
-        exerciseDurations[8] = 30;
-        exerciseDurations[9] = 30;
-        exerciseDurations[10] = 30;
-        exerciseDurations[11] = 30;
-        exerciseDurations[12] = 30;
-        exerciseDurations[13] = 30;
-        exerciseDurations[14] = 30;
-        exerciseDurations[15] = 30;
-        exerciseDurations[16] = 30;
-        exerciseDurations[17] = 30;
-        exerciseDurations[18] = 30;
-        exerciseDurations[19] = 30;
+        Exercise[] workout = new Exercise[11];
 
+        workout[0] = new Exercise("Body-weight Squats", 60);
+        workout[1] = new Exercise("Lunges Left Forward", 60);
+        workout[2] = new Exercise("Lunges Left Backward", 60);
+        workout[3] = new Exercise("Squat Hops", 30);
+        workout[4] = new Exercise("Mountain Climbers", 30);
+        workout[5] = new Exercise("Burpies", 30);
+        workout[6] = new Exercise("Butt Kickers", 30);
+        workout[7] = new Exercise("High Knees", 60);
+        workout[8] = new Exercise("Left Leg Calf Raises", 60);
+        workout[9] = new Exercise("Right Leg Calf Raises", 60);
+        workout[10] = new Exercise("Stretch", 120);
+
+        return workout;
+    }
+
+    private Exercise[] InitFullBodyWorkout()
+    {
+        Exercise[] workout = new Exercise[10];
+
+        workout[0] = new Exercise("Controlled Push-ups", 60);
+        workout[1] = new Exercise("Burpies", 60);
+        workout[2] = new Exercise("Body-weight Squats", 60);
+        workout[3] = new Exercise("Skullers", 60);
+        workout[4] = new Exercise("Russian Twists", 60);
+        workout[5] = new Exercise("Right Side Plank", 60);
+        workout[6] = new Exercise("Shoulder Shrug Plank", 60);
+        workout[7] = new Exercise("Left Side Plank", 60);
+        workout[8] = new Exercise("Jumping Jacks", 60);
+        workout[9] = new Exercise("High Knees", 60);
+
+        return workout;
     }
 
 
