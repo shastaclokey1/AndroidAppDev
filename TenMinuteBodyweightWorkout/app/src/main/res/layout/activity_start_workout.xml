@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text=""
+            android:text="30"
             android:textSize="40dp"
             android:layout_gravity="center"/>
 
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:text=""
+            android:text="120"
             android:textSize="40dp"
             android:layout_gravity="center"/>
 
@@ -54,26 +54,31 @@
             android:id="@+id/workout_type"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_gravity="center">
             <RadioButton android:id="@+id/abs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="1dp"
                 android:text="Abs"
                 android:onClick="onRadioButtonClicked"/>
             <RadioButton android:id="@+id/arms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="1dp"
                 android:text="Arms"
                 android:onClick="onRadioButtonClicked"/>
             <RadioButton android:id="@+id/legs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="1dp"
                 android:text="Legs"
                 android:onClick="onRadioButtonClicked"/>
             <RadioButton android:id="@+id/full_body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Full Body"
+                android:layout_margin="1dp"
+                android:text="Mixed"
                 android:onClick="onRadioButtonClicked"/>
         </RadioGroup>
 
